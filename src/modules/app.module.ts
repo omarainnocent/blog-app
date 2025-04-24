@@ -4,6 +4,7 @@ import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import * as path from 'path';
 import { UserEntity } from './users/entities/user.entity';
+import { UserModule } from './users/user.module';
 
 @Global()
 @Module({
@@ -20,27 +21,15 @@ import { UserEntity } from './users/entities/user.entity';
         port: configService.get<number>('DB_PORT'),
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_DATABASE'),
-        entities: [
-          
-        //   UserEntity
+        database: configService.get('DB_DATABASE'),       
+        entities: [ 
+          UserEntity
         ],
         synchronize: true,
       }),
       inject: [ConfigService],
     } as TypeOrmModuleAsyncOptions), // Add TypeOrmModuleAsyncOptions
-    // I18nModule.forRootAsync({
-    //   inject: [ConfigService],
-    //   resolvers: [AcceptLanguageResolver],
-    //   useFactory: (configService: ConfigService) => ({
-    //     fallbackLanguage: 'en',
-    //     loaderOptions: {
-    //       path: path.join(__dirname, '/i18n/'),
-    //       watch: configService.get('NODE_ENV') === 'development',
-    //     },
-    //     logging: configService.get('NODE_ENV') === 'development', // REVIEW: Is this necessary?
-    //   }),
-    // }),
+    UserModule,
 
 
 
