@@ -56,6 +56,14 @@ export class UserService {
         await this.userRepository.delete(id);
         return user
     }
-
+    //delete all users
+    async deleteAllUser() {
+        const users = await this.userRepository.find();
+        if (users.length === 0) {
+            return null
+        }
+        await this.userRepository.clear();
+        return users
+    }
     
 }
