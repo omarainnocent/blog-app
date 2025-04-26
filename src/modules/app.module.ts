@@ -5,6 +5,7 @@ import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import * as path from 'path';
 import { UserEntity } from './users/entities/user.entity';
 import { UserModule } from './users/user.module';
+import { AuthModule } from './users/features/auth/auth.user.module';
 
 @Global()
 @Module({
@@ -30,10 +31,7 @@ import { UserModule } from './users/user.module';
       inject: [ConfigService],
     } as TypeOrmModuleAsyncOptions), // Add TypeOrmModuleAsyncOptions
     UserModule,
-
-
-
-    // DatabaseBackupModule
+    AuthModule,
   ],
   controllers: [],
   providers: [],
