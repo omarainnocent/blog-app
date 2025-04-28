@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotAcceptableException } from "@nestjs/common";
+import { Injectable, Logger, NotAcceptableException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Email } from "src/common/dto/email.dto";
 import { CreateUserDto } from "src/modules/users/dto/createUser.dto";
@@ -64,7 +64,7 @@ export class AuthService {
 
     }
 
-
+    //Login here
     async login(dto: LoginDto): Promise<UserConnection> {
         this.logger.log(`Login attempt for email: ${dto.email}`);
         
@@ -124,5 +124,40 @@ export class AuthService {
         return this.jwtService.sign(payload);
       }
 
+    //update password here
+    async updatePassword(
+        adminId: string,
+        currentPassword: string,
+        newPassword: string,
+      ): Promise<void> {
+        this.logger.log(`Password update attempt for admin ID: ${adminId}`);
+    
+        const user = await this.userRepository.findOne({ where: { id: adminId } });
+        if (!user) {
+          this.logger.warn(`Password update failed - Admin not found for ID: ${adminId}`);
+          throw new NotFoundException(ExceptionEnum.adminNotFound);
+        }
+    
+        const isPasswordValid = await bcrypt.compare(
+          currentPassword,
+          user.password,
+        );
+        if (!isPasswordValid) {
+          this.logger.warn(`Password update failed - Invalid current password for admin ID: ${adminId}`);
+          throw new NotAcceptableException(ExceptionEnum.wrongPassword);
+        }
+    
+        const hashedNewPassword = await bcrypt.hash(
+          newPassword,
+          CONFIG_PASSWORD_HASH_SALT,
+        );
+    
+        user.password = hashedNewPassword;
+        await this.userRepository.save(user);
+        
+        this.logger.log(`Successfully updated password for admin ID: ${adminId}`);
+      }
+
+      
 
 }
