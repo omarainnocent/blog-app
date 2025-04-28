@@ -49,4 +49,9 @@ export class BlogController {
     }    
 
     //delete all blogs
+    @Delete('deleteAll')
+    async deleteAllBlog() {
+        const users = await this.blogService.deleteAllBlog();
+        return users
+    }     
 }
