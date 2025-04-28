@@ -6,6 +6,8 @@ import * as path from 'path';
 import { UserEntity } from './users/entities/user.entity';
 import { UserModule } from './users/user.module';
 import { AuthModule } from './users/features/auth/auth.user.module';
+import { BlogModule } from './blogs/blog.module';
+import { BlogEntity } from './blogs/entities/blog.entity';
 
 @Global()
 @Module({
@@ -24,7 +26,8 @@ import { AuthModule } from './users/features/auth/auth.user.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),       
         entities: [ 
-          UserEntity
+          UserEntity,
+          BlogEntity,
         ],
         synchronize: true,
       }),
@@ -32,6 +35,7 @@ import { AuthModule } from './users/features/auth/auth.user.module';
     } as TypeOrmModuleAsyncOptions), // Add TypeOrmModuleAsyncOptions
     UserModule,
     AuthModule,
+    BlogModule,
   ],
   controllers: [],
   providers: [],

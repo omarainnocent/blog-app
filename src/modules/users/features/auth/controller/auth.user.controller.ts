@@ -27,6 +27,7 @@ export class AuthController {
 
   @Patch('update-password')
   @ApiBearerAuth()
+//   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'Password updated successfully' })
   async updatePassword(
     @Request() req,
